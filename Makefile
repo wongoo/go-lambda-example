@@ -6,11 +6,11 @@ clean:
 
 build: clean
 		@for dir in `ls handler`; do \
-			GOOS=linux go build -o dist/handler/$$dir github.com/sbstjn/go-lambda-example/handler/$$dir; \
+			GOOS=linux go build -o dist/handler/$$dir github.com/wongoo/go-lambda-example/handler/$$dir; \
 		done
 
 run:
-		aws-sam-local local start-api
+		sam local start-api
 
 install:
 		go get github.com/aws/aws-lambda-go/events
@@ -18,7 +18,7 @@ install:
 		go get github.com/stretchr/testify/assert
 
 install-dev:
-		go get github.com/awslabs/aws-sam-local
+		pip install --user aws-sam-cli
 
 test:
 		go test ./... --cover

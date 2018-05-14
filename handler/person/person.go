@@ -5,7 +5,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/sbstjn/go-lambda-example/repository"
+	"github.com/wongoo/go-lambda-example/repository"
 )
 
 // PersonResponse
