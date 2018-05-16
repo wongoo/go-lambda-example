@@ -38,6 +38,11 @@ func handleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 		r := gin.Default()
 		r.Use(CORSMiddleware())
 
+		r.GET("/gin", func(context *gin.Context) {
+			log.Println("/index")
+			context.String(http.StatusOK, "index")
+		})
+
 		r.GET("/gin/env", func(context *gin.Context) {
 			log.Println("/gin/env")
 			context.String(http.StatusOK, "current env is %v", GIN_GO_ENV)
