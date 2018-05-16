@@ -25,6 +25,18 @@ Resources:
           Properties:
             Path: /person/{id}
             Method: get
+  Gin:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/handler/gin
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: '/gin/{proxy+}'
+            Method: any
 Outputs:
   URL:
     Description: URL for HTTPS Endpoint

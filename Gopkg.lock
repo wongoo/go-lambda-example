@@ -13,10 +13,35 @@
   version = "v1.2.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/awslabs/aws-lambda-go-api-proxy"
+  packages = [
+    "core",
+    "gin"
+  ]
+  revision = "6986cdf6237e77c4d9a721a1b153e904fa384a24"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
+
+[[projects]]
+  name = "github.com/gin-gonic/gin"
+  packages = [
+    ".",
+    "binding",
+    "render"
+  ]
+  revision = "50e7e427300a7eeeb299a4cd5bc1ebfa04d48528"
+  version = "v0.5"
+
+[[projects]]
+  name = "github.com/julienschmidt/httprouter"
+  packages = ["."]
+  revision = "8c199fb6259ffc1af525cc3ad52ee60ba8359669"
+  version = "v1.1"
 
 [[projects]]
   name = "github.com/pmezard/go-difflib"
@@ -33,6 +58,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "68b49a612618182e92c8e8595932bb85541d00ffd1ccc795bff24400e9356899"
+  inputs-digest = "f0d170827d5f8f0c239e8b74bb8c02230e551ec398c20388900d5a7bb65cd5bb"
   solver-name = "gps-cdcl"
   solver-version = 1

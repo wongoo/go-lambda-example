@@ -27,6 +27,9 @@ AWS_ACCOUNT_ID=1234567890
 AWS_BUCKET_NAME=your-bucket-name-for-cloudformation-package-data
 AWS_STACK_NAME=your-cloudformation-stack-name
 AWS_REGION=us-west-1
+
+#BUILD_ENV=dev
+BUILD_ENV=prod
 ```
 
 ### Install AWS CLI
