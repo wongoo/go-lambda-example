@@ -8,7 +8,7 @@ clean:
 
 build: clean
 		@for dir in `ls handler`; do \
-			GOOS=linux go build -tags $(BUILD_ENV) -o dist/handler/$$dir github.com/wongoo/go-lambda-example/handler/$$dir; \
+			GOOS=linux go build -tags $(BUILD_ENV) -o dist/$$dir github.com/wongoo/go-lambda-example/handler/$$dir; \
 		done
 
 run:

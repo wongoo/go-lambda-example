@@ -4,7 +4,7 @@ Resources:
   People:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: dist/handler/people
+      Handler: dist/people
       Runtime: go1.x
       Tracing: Active
       Events:
@@ -16,7 +16,7 @@ Resources:
   Person:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: dist/handler/person
+      Handler: dist/person
       Runtime: go1.x
       Tracing: Active
       Events:
@@ -28,7 +28,7 @@ Resources:
   Gin:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: dist/handler/gin
+      Handler: dist/gin
       Runtime: go1.x
       Tracing: Active
       Events:

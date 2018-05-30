@@ -7,6 +7,8 @@ import (
 	"log"
 	"github.com/aws/aws-lambda-go/events"
 	"net/http"
+	"github.com/awslabs/aws-lambda-go-api-proxy/core"
+	"fmt"
 )
 
 var (
@@ -45,7 +47,16 @@ func handleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 
 		r.GET("/gin/env", func(context *gin.Context) {
 			log.Println("/gin/env")
-			context.String(http.StatusOK, "current env is %v", GIN_GO_ENV)
+			ctxBody := " no gw context"
+			acc := new(core.RequestAccessor)
+			ctx, err := acc.GetAPIGatewayContext(context.Request)
+			if err != nil {
+				ctxBody += ",Error:" + err.Error()
+			} else {
+				ctxBody = fmt.Sprint(ctx)
+			}
+
+			context.String(http.StatusOK, "current env is %v <br> %v", GIN_GO_ENV, ctxBody)
 		})
 		r.GET("/gin/hello/:name", func(context *gin.Context) {
 			log.Println("/gin/hello")
