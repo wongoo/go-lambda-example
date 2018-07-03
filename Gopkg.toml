@@ -35,7 +35,7 @@
 
 [[constraint]]
   name = "github.com/gin-gonic/gin"
-  version = "1.2.0"
+  revision = "caf3e350a548af1add9def68087ac53d1d000caa"
 
 [[constraint]]
   name = "github.com/stretchr/testify"

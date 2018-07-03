@@ -11,9 +11,15 @@ import (
 	"fmt"
 )
 
+const (
+	HeaderCustom = "x-custom"
+	HeaderClient = "x-client"
+)
+
 var (
 	initialized = false
 	ginLambda   *ginadapter.GinLambda
+	ginEngine   *gin.Engine
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -32,20 +38,49 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
+// Proxy receives an API Gateway proxy event, transforms it into an http.Request
+// object, and sends it to the gin.Engine for routing.
+// It returns a proxy response object gneerated from the http.ResponseWriter.
+func Proxy(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	ginRequest, err := ginLambda.ProxyEventToHTTPRequest(req)
+
+	if err != nil {
+		return core.GatewayTimeout(), core.NewLoggedError("Could not convert proxy event to request: %v", err)
+	}
+
+	addCustomHeader(ginRequest)
+
+	respWriter := core.NewProxyResponseWriter()
+	ginEngine.ServeHTTP(http.ResponseWriter(respWriter), ginRequest)
+
+	proxyResponse, err := respWriter.GetProxyResponse()
+	if err != nil {
+		return core.GatewayTimeout(), core.NewLoggedError("Error while generating proxy response: %v", err)
+	}
+
+	return proxyResponse, nil
+}
+
+func addCustomHeader(request *http.Request) {
+	request.Header.Add(HeaderCustom, "hello")
+}
+
 func handleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if !initialized {
 		// stdout and stderr are sent to AWS CloudWatch Logs
 		log.Printf("Gin cold start\n")
 
-		r := gin.Default()
-		r.Use(CORSMiddleware())
+		ginEngine = gin.Default()
+		ginEngine.Use(CORSMiddleware())
 
-		r.GET("/gin", func(context *gin.Context) {
+		ginEngine.GET("/gin", func(context *gin.Context) {
 			log.Println("/index")
+			log.Println(HeaderCustom, context.GetHeader(HeaderCustom))
+			log.Println(HeaderClient, context.Request.Header.Get(HeaderClient))
 			context.String(http.StatusOK, "index")
 		})
 
-		r.GET("/gin/env", func(context *gin.Context) {
+		ginEngine.GET("/gin/env", func(context *gin.Context) {
 			log.Println("/gin/env")
 			ctxBody := " no gw context"
 			acc := new(core.RequestAccessor)
@@ -58,17 +93,17 @@ func handleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 
 			context.String(http.StatusOK, "current env is %v <br> %v", GIN_GO_ENV, ctxBody)
 		})
-		r.GET("/gin/hello/:name", func(context *gin.Context) {
+		ginEngine.GET("/gin/hello/:name", func(context *gin.Context) {
 			log.Println("/gin/hello")
 			name := context.Params.ByName("name")
 			context.String(http.StatusOK, "hello %v", name)
 		})
 
-		ginLambda = ginadapter.New(r)
+		ginLambda = ginadapter.New(ginEngine)
 		initialized = true
 	}
 	// If no name is provided in the HTTP request body, throw an error
-	response, err := ginLambda.Proxy(request)
+	response, err := Proxy(request)
 
 	// Enable CORS
 	response.Headers["Access-Control-Allow-Origin"] = "*"
