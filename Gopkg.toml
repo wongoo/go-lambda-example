@@ -27,7 +27,7 @@
 
 [[constraint]]
   name = "github.com/aws/aws-lambda-go"
-  version = "1.2.0"
+  revision = "3574a030467ca312f135e64a4a1bf293a216febd"
 
 [[constraint]]
   branch = "master"
@@ -40,6 +40,10 @@
 [[constraint]]
   name = "github.com/stretchr/testify"
   version = "1.2.1"
+
+[[override]]
+  name = "github.com/satori/go.uuid"
+  revision = "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
 
 [prune]
   go-tests = true
